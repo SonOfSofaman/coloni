@@ -13,9 +13,4 @@
 			this.Height = height;
 		}
 	}
-
-	public enum TextureTag
-	{
-		Splash
-	}
 }

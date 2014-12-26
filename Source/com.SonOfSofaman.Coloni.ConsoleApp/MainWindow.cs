@@ -10,12 +10,16 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp
 	{
 		private Scene CurrentScene;
 		private SplashScene SplashScene;
+		private MenuScene MenuScene;
 
 		internal MainWindow()
 		{
 			this.SplashScene = new SplashScene();
-			this.SplashScene.OnExit += new SceneEvent(() => { this.Exit(); });
-			this.SplashScene.OnDone += new SceneEvent(() => { this.Exit(); });
+			this.SplashScene.OnDone += new SceneEvent(() => { this.CurrentScene = this.MenuScene; });
+
+			this.MenuScene = new MenuScene();
+			this.MenuScene.OnExit += new SceneEvent(() => { this.Exit(); });
+
 			this.CurrentScene = this.SplashScene;
 		}
 
@@ -27,8 +31,6 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp
 			this.VSync = VSyncMode.On;
 			this.WindowBorder = OpenTK.WindowBorder.Hidden;
 			this.WindowState = OpenTK.WindowState.Fullscreen;
-
-			Program.TextureManager.AddTexture(TextureTag.Splash, MakeSplashBitmap());
 
 			GL.Enable(EnableCap.Texture2D);
 		}
@@ -59,22 +61,6 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp
 			this.CurrentScene.Render(this.ClientSize);
 			GL.Flush();
 			this.SwapBuffers();
-		}
-
-		private static Bitmap MakeSplashBitmap()
-		{
-			Size size = new Size(128, 48);
-			Font font = new Font(FontFamily.GenericSansSerif, 28.0F);
-			SolidBrush brush = new SolidBrush(Color.FromArgb(255, 255, 204));
-			StringFormat format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-
-			Bitmap result = new Bitmap(size.Width, size.Height);
-			Graphics graphics = Graphics.FromImage(result);
-
-			graphics.Clear(Color.Black);
-			graphics.DrawString("coloni", font, brush, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
-
-			return result;
 		}
 	}
 }
