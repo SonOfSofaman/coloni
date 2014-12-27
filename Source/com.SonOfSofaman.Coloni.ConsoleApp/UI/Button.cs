@@ -51,7 +51,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.UI
 			Graphics graphics = Graphics.FromImage(result);
 
 			float radius = 24.0F;
-			graphics.Clear(Color.FromArgb(0x00, 0x00, 0x00));
+			graphics.Clear(Palette.UIPanel);
 
 			graphics.FillEllipse(background, 0.0F, 0.0F, radius, radius);
 			graphics.DrawEllipse(backgroundPen, 0.0F, 0.0F, radius, radius);

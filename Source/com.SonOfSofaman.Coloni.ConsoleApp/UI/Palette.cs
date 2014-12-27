@@ -38,6 +38,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.UI
 
 		public static Color UIBackground { get { return Color.FromArgb(R(RGB_Primary), G(RGB_Primary), B(RGB_Primary)); } }
 		public static Color UIBackgroundActive { get { return Color.FromArgb(R(RGB_Primary2), G(RGB_Primary2), B(RGB_Primary2)); } }
+		public static Color UIPanel { get { return Color.FromArgb(R(RGB_Secondary), G(RGB_Secondary), B(RGB_Secondary)); } }
 
 		private static int R(int argb)
 		{

@@ -13,6 +13,8 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 		internal SceneEvent OnExit { get; set; }
 		private List<Control> Controls = new List<Control>();
 
+		private const string TextureTag_Background = "MenuScene.Background";
+
 		internal MenuScene()
 		{
 			int index = 0;
@@ -28,6 +30,8 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			Controls.Add(createNewWorldButton);
 			Controls.Add(playButton);
 			Controls.Add(exitButton);
+
+			Program.TextureManager.RegisterTexture(TextureTag_Background, MakeBackgroundBitmap());
 		}
 
 		internal override void Enter()
@@ -65,10 +69,31 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 
 		internal override void Render()
 		{
+			TextureInfo textureInfo = Program.TextureManager[TextureTag_Background];
+			GL.BindTexture(TextureTarget.Texture2D, textureInfo.ID);
+			GL.Begin(PrimitiveType.Quads); // LL, UL, UR, LR
+			GL.TexCoord2(0, 0); GL.Vertex2(-textureInfo.Width / 2, textureInfo.Height / 2 - 24);
+			GL.TexCoord2(0, 1); GL.Vertex2(-textureInfo.Width / 2, -textureInfo.Height / 2 - 24);
+			GL.TexCoord2(1, 1); GL.Vertex2(textureInfo.Width / 2, -textureInfo.Height / 2 - 24);
+			GL.TexCoord2(1, 0); GL.Vertex2(textureInfo.Width / 2, textureInfo.Height / 2 - 24);
+			GL.End();
+
 			foreach (Control control in Controls)
 			{
 				control.Render();
 			}
+		}
+
+		private Bitmap MakeBackgroundBitmap()
+		{
+			Size size = new Size(208, 160);
+
+			Bitmap result = new Bitmap(size.Width, size.Height);
+			Graphics graphics = Graphics.FromImage(result);
+
+			graphics.Clear(Palette.UIPanel);
+
+			return result;
 		}
 	}
 }
