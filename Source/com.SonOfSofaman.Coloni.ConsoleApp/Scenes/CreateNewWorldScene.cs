@@ -9,8 +9,9 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 	{
 		internal SceneEvent OnDone { get; set; }
 
-		private SceneState CurrentSceneState;
 		private WorldBuilder WorldBuilder;
+
+		private SceneState CurrentSceneState;
 		private double CurrentProgress = 0.0;
 		private double PreviousProgress = 0.0;
 
@@ -19,7 +20,6 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 
 		internal CreateNewWorldScene()
 		{
-			Program.TextureManager.RegisterTexture(TextureTag_Working, MakeProgressBitmap(0.0));
 			Program.TextureManager.RegisterTexture(TextureTag_Complete, MakeMessageBitmap("complete"));
 			this.WorldBuilder = new WorldBuilder();
 			this.WorldBuilder.OnProgress += new WorldBuilderProgressEvent((progress) => { ReportProgress(progress); });
@@ -29,6 +29,9 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 		internal override void Enter()
 		{
 			this.CurrentSceneState = SceneState.None;
+			this.CurrentProgress = 0.0;
+			this.PreviousProgress = 0.0;
+			Program.TextureManager.RegisterTexture(TextureTag_Working, MakeProgressBitmap(0.0));
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
