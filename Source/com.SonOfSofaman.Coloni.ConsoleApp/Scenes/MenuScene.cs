@@ -39,6 +39,8 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			GL.Ortho(-this.ClientSize.Width / 2.0, this.ClientSize.Width / 2.0, -this.ClientSize.Height / 2.0, this.ClientSize.Height / 2.0, -1.0, 1.0);
+
+			this.Controls[1].Enabled = (Program.CurrentWorldState != null);
 		}
 
 		internal override void Exit()

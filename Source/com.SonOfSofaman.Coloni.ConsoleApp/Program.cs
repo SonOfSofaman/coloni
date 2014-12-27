@@ -1,8 +1,11 @@
-﻿namespace com.SonOfSofaman.Coloni.ConsoleApp
+﻿using com.SonOfSofaman.Coloni;
+
+namespace com.SonOfSofaman.Coloni.ConsoleApp
 {
 	class Program
 	{
 		internal static TextureManager TextureManager = new TextureManager();
+		internal static WorldState CurrentWorldState = null;
 
 		static void Main(string[] args)
 		{

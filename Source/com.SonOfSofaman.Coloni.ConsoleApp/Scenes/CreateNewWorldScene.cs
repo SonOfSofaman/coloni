@@ -9,16 +9,26 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 	{
 		internal SceneEvent OnDone { get; set; }
 
-		private double Countdown;
+		private SceneState CurrentSceneState;
+		private WorldBuilder WorldBuilder;
+		private double CurrentProgress = 0.0;
+		private double PreviousProgress = 0.0;
+
+		private const string TextureTag_Working = "CreateNewWorldScene.Working";
+		private const string TextureTag_Complete = "CreateNewWorldScene.Complete";
 
 		internal CreateNewWorldScene()
 		{
-			Program.TextureManager.RegisterTexture("CreateNewWorldScene.Message", MakeBitmap());
+			Program.TextureManager.RegisterTexture(TextureTag_Working, MakeProgressBitmap(0.0));
+			Program.TextureManager.RegisterTexture(TextureTag_Complete, MakeMessageBitmap("complete"));
+			this.WorldBuilder = new WorldBuilder();
+			this.WorldBuilder.OnProgress += new WorldBuilderProgressEvent((progress) => { ReportProgress(progress); });
+			this.WorldBuilder.OnComplete += new WorldBuilderCompleteEvent((worldState) => { Complete(worldState); });
 		}
 
 		internal override void Enter()
 		{
-			this.Countdown = 10.0;
+			this.CurrentSceneState = SceneState.None;
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
@@ -31,16 +41,32 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 
 		internal override void Update(double deltaTime, InputDeviceState inputDeviceState)
 		{
-			this.Countdown -= deltaTime;
-			if (this.Countdown <= 0.0)
+			switch (this.CurrentSceneState)
 			{
-				this.Countdown = 0.0;
-				if (this.OnDone != null) this.OnDone();
-			}
+				case SceneState.None:
+				{
+					this.CurrentSceneState = SceneState.Working;
+					WorldBuilder.Build();
+					break;
+				}
+				case SceneState.Working:
+				{
+					if (this.CurrentProgress > this.PreviousProgress)
+					{
+						Program.TextureManager.RegisterTexture(TextureTag_Working, MakeProgressBitmap(this.CurrentProgress));
+						this.PreviousProgress = this.CurrentProgress;
+					}
 
-			if (this.PreviousKeyState(Key.Escape) && !inputDeviceState.KeyboardState[Key.Escape])
-			{
-				if (this.OnDone != null) this.OnDone();
+					break;
+				}
+				case SceneState.Complete:
+				{
+					if (this.PreviousKeyState(Key.Escape) && !inputDeviceState.KeyboardState[Key.Escape])
+					{
+						if (this.OnDone != null) this.OnDone();
+					}
+					break;
+				}
 			}
 
 			this.PreviousInputDeviceState = inputDeviceState;
@@ -48,7 +74,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 
 		internal override void Render()
 		{
-			TextureInfo textureInfo = Program.TextureManager["CreateNewWorldScene.Message"];
+			TextureInfo textureInfo = this.CurrentSceneState == SceneState.Complete ? Program.TextureManager[TextureTag_Complete] : Program.TextureManager[TextureTag_Working];
 			GL.BindTexture(TextureTarget.Texture2D, textureInfo.ID);
 			GL.Begin(PrimitiveType.Quads); // LL, UL, UR, LR
 			GL.TexCoord2(0, 0); GL.Vertex2(-textureInfo.Width / 2, textureInfo.Height / 2);
@@ -58,7 +84,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			GL.End();
 		}
 
-		private static Bitmap MakeBitmap()
+		private static Bitmap MakeMessageBitmap(string message)
 		{
 			Size size = new Size(128, 48);
 			Font font = new Font(FontFamily.GenericSansSerif, 14.0F);
@@ -69,9 +95,49 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			Graphics graphics = Graphics.FromImage(result);
 
 			graphics.Clear(Color.Black);
-			graphics.DrawString("not implemented", font, brush, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
+			graphics.DrawString(message, font, brush, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
 
 			return result;
+		}
+
+		private static Bitmap MakeProgressBitmap(double progress)
+		{
+			Size size = new Size(128, 48);
+			Font font = new Font(FontFamily.GenericSansSerif, 14.0F);
+			Pen penBackground = new Pen(Palette.UIBackground, 1.0F);
+			SolidBrush brushBackground = new SolidBrush(Palette.UIPanel);
+			SolidBrush brushForground = new SolidBrush(Palette.UIForeground);
+			StringFormat format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+			Rectangle rectangle = new Rectangle(0, 0, (int)(128.0 * progress), 48);
+			string message = string.Format("{0:P0}", progress);
+
+			Bitmap result = new Bitmap(size.Width, size.Height);
+			Graphics graphics = Graphics.FromImage(result);
+
+			graphics.Clear(Color.Black);
+			graphics.FillRectangle(brushBackground, rectangle);
+			graphics.DrawRectangle(penBackground, 0, 0, size.Width - 1, size.Height - 1);
+			graphics.DrawString(message, font, brushForground, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
+
+			return result;
+		}
+
+		private void ReportProgress(double progress)
+		{
+			this.CurrentProgress = progress;
+		}
+
+		private void Complete(WorldState worldState)
+		{
+			Program.CurrentWorldState = worldState;
+			this.CurrentSceneState = SceneState.Complete;
+		}
+
+		enum SceneState
+		{
+			None,
+			Working,
+			Complete,
 		}
 	}
 }

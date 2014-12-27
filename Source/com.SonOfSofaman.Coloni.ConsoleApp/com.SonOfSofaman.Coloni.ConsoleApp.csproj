@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>com.SonOfSofaman.Coloni.ConsoleApp</RootNamespace>
-    <AssemblyName>Coloni</AssemblyName>
+    <AssemblyName>Coloni.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
