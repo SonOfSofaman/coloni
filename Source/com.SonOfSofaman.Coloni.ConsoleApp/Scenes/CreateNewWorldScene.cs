@@ -9,7 +9,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 	{
 		internal SceneEvent OnDone { get; set; }
 
-		private double Countdown = 10.0;
+		private double Countdown;
 
 		internal CreateNewWorldScene()
 		{
@@ -18,6 +18,8 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 
 		internal override void Enter()
 		{
+			this.Countdown = 10.0;
+
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			GL.Ortho(-this.ClientSize.Width / 2.0, this.ClientSize.Width / 2.0, -this.ClientSize.Height / 2.0, this.ClientSize.Height / 2.0, -1.0, 1.0);
