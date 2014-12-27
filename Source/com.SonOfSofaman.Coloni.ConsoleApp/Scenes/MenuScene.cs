@@ -57,10 +57,14 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 				if (control.Bounds.Contains(this.ClientSize.Width / 2 - inputDeviceState.MouseX, this.ClientSize.Height / 2 - inputDeviceState.MouseY))
 				{
 					control.Active = inputDeviceState.LeftButtonDown;
-					if (inputDeviceState.LeftButtonDown)
+					if (this.PreviousInputDeviceState.LeftButtonDown && !inputDeviceState.LeftButtonDown)
 					{
 						if (control.OnClick != null) control.OnClick();
 					}
+				}
+				else
+				{
+					control.Active = false;
 				}
 			}
 
