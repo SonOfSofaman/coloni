@@ -22,8 +22,8 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 		{
 			Program.TextureManager.RegisterTexture(TextureTag_Complete, MakeMessageBitmap("complete"));
 			this.WorldBuilder = new WorldBuilder();
-			this.WorldBuilder.OnProgress += new WorldBuilderProgressEvent((progress) => { ReportProgress(progress); });
-			this.WorldBuilder.OnComplete += new WorldBuilderCompleteEvent((worldState) => { Complete(worldState); });
+			this.WorldBuilder.OnProgress += new WorldBuilderProgressEvent((progress) => { this.CurrentProgress = progress; });
+			this.WorldBuilder.OnComplete += new WorldBuilderCompleteEvent((worldState) => { Program.CurrentWorldState = worldState; this.CurrentSceneState = SceneState.Complete; });
 		}
 
 		internal override void Enter()
@@ -123,17 +123,6 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			graphics.DrawString(message, font, brushForground, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
 
 			return result;
-		}
-
-		private void ReportProgress(double progress)
-		{
-			this.CurrentProgress = progress;
-		}
-
-		private void Complete(WorldState worldState)
-		{
-			Program.CurrentWorldState = worldState;
-			this.CurrentSceneState = SceneState.Complete;
 		}
 
 		enum SceneState
