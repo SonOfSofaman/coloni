@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace com.SonOfSofaman.Coloni.ConsoleApp.UI
 {
@@ -15,7 +10,9 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.UI
 		public string TextureTag { get { return string.Format("Control.{0}", this.ID); } }
 		public Rectangle Bounds { get; set; }
 		public string Text { get; private set; }
+		public bool Visible { get; set; }
 		public bool Enabled { get; set; }
+		public bool Active { get; set; }
 
 		public Control(string text, Rectangle bounds)
 		{
@@ -25,5 +22,6 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.UI
 		}
 
 		public abstract void Render();
+		public virtual ControlEvent OnClick { get; set; }
 	}
 }

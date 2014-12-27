@@ -5,15 +5,15 @@ using System.Drawing;
 
 namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 {
-	internal class SplashScene : Scene
+	internal class CreateNewWorldScene : Scene
 	{
 		internal SceneEvent OnDone { get; set; }
 
 		private double Countdown = 10.0;
 
-		internal SplashScene()
+		internal CreateNewWorldScene()
 		{
-			Program.TextureManager.RegisterTexture("SplashScene.Logo", MakeSplashBitmap());
+			Program.TextureManager.RegisterTexture("CreateNewWorldScene.Message", MakeBitmap());
 		}
 
 		internal override void Enter()
@@ -35,7 +35,8 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 				this.Countdown = 0.0;
 				if (this.OnDone != null) this.OnDone();
 			}
-			if (inputDeviceState.KeyboardState[Key.Space])
+
+			if (this.PreviousKeyState(Key.Escape) && !inputDeviceState.KeyboardState[Key.Escape])
 			{
 				if (this.OnDone != null) this.OnDone();
 			}
@@ -45,7 +46,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 
 		internal override void Render()
 		{
-			TextureInfo textureInfo = Program.TextureManager["SplashScene.Logo"];
+			TextureInfo textureInfo = Program.TextureManager["CreateNewWorldScene.Message"];
 			GL.BindTexture(TextureTarget.Texture2D, textureInfo.ID);
 			GL.Begin(PrimitiveType.Quads); // LL, UL, UR, LR
 			GL.TexCoord2(0, 0); GL.Vertex2(-textureInfo.Width / 2, textureInfo.Height / 2);
@@ -55,10 +56,10 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			GL.End();
 		}
 
-		private static Bitmap MakeSplashBitmap()
+		private static Bitmap MakeBitmap()
 		{
 			Size size = new Size(128, 48);
-			Font font = new Font(FontFamily.GenericSansSerif, 28.0F);
+			Font font = new Font(FontFamily.GenericSansSerif, 14.0F);
 			SolidBrush brush = new SolidBrush(Palette.UIForeground);
 			StringFormat format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
 
@@ -66,7 +67,7 @@ namespace com.SonOfSofaman.Coloni.ConsoleApp.Scenes
 			Graphics graphics = Graphics.FromImage(result);
 
 			graphics.Clear(Color.Black);
-			graphics.DrawString("coloni", font, brush, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
+			graphics.DrawString("not implemented", font, brush, new RectangleF(0.0F, 0.0F, size.Width, size.Height), format);
 
 			return result;
 		}

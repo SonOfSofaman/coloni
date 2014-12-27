@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using OpenTK.Graphics.OpenGL;
 
 namespace com.SonOfSofaman.Coloni.ConsoleApp
 {
